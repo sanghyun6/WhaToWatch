@@ -27,7 +27,7 @@ export default async function LandingPage() {
   const trending = await getTrending();
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden">
+    <div className="relative overflow-x-hidden">
       {/* Ambient background */}
       <div className="fixed inset-0 -z-10 bg-surface" />
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-30%,hsl(var(--accent)/0.12),transparent_50%)]" />

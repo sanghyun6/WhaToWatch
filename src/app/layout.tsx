@@ -3,6 +3,7 @@ import { Syne, DM_Sans } from "next/font/google";
 import { ViewTransitions } from "next-view-transitions";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { DebugHeight } from "@/components/DebugHeight";
 
 const syne = Syne({
   variable: "--font-display",
@@ -43,7 +44,8 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen font-sans bg-surface text-foreground">
+      <body className="font-sans bg-surface text-foreground">
+        <DebugHeight />
         <ThemeProvider>
           <ViewTransitions>
             {children}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { UnifiedRecommendation } from "@/types";
 import { MovieCard } from "./MovieCard";
 import { MediaModal } from "./MediaModal";
@@ -15,7 +15,6 @@ export function TrendingMediaGrid({ items: initialItems }: TrendingMediaGridProp
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setItems(initialItems);
@@ -25,6 +24,18 @@ export function TrendingMediaGrid({ items: initialItems }: TrendingMediaGridProp
 
   const loadMore = useCallback(async () => {
     if (isLoading || !hasMore) return;
+
+    document.body.style.overflow = "hidden";
+    const scrollY = window.scrollY;
+    const handleScroll = () => window.scrollTo(0, scrollY);
+    window.addEventListener("scroll", handleScroll);
+
+    const unlock = () => {
+      window.removeEventListener("scroll", handleScroll);
+      document.body.style.overflow = "";
+      setIsLoading(false);
+    };
+
     setIsLoading(true);
     try {
       const nextPage = page + 1;
@@ -32,33 +43,17 @@ export function TrendingMediaGrid({ items: initialItems }: TrendingMediaGridProp
       const { items: newItems } = await res.json();
       if (newItems.length === 0) {
         setHasMore(false);
+        setTimeout(unlock, 100);
         return;
       }
       setItems((prev) => [...prev, ...newItems]);
       setPage(nextPage);
+      setTimeout(unlock, 100);
     } catch {
       setHasMore(false);
-    } finally {
-      setIsLoading(false);
+      setTimeout(unlock, 100);
     }
   }, [page, isLoading, hasMore]);
-
-  useEffect(() => {
-    const sentinel = sentinelRef.current;
-    if (!sentinel || !hasMore || isLoading) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting && hasMore && !isLoading) {
-          loadMore();
-        }
-      },
-      { rootMargin: "200px", threshold: 0 }
-    );
-
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, [hasMore, isLoading, loadMore]);
 
   return (
     <>
@@ -73,10 +68,23 @@ export function TrendingMediaGrid({ items: initialItems }: TrendingMediaGridProp
           </div>
         ))}
       </div>
-      <div ref={sentinelRef} className="h-4" aria-hidden />
-      {isLoading && (
+      {hasMore && (
         <div className="mt-8 flex justify-center">
-          <div className="h-10 w-10 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+          <button
+            type="button"
+            onClick={loadMore}
+            disabled={isLoading}
+            className="inline-flex min-w-[160px] items-center justify-center gap-2 rounded-xl border-2 border-foreground/20 bg-surface-muted/50 px-8 py-4 font-display font-semibold text-foreground transition-colors hover:border-foreground/40 hover:bg-surface-muted focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-surface disabled:opacity-70"
+          >
+            {isLoading ? (
+              <>
+                <div className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-accent border-t-transparent" />
+                Loading...
+              </>
+            ) : (
+              "Load More"
+            )}
+          </button>
         </div>
       )}
       <MediaModal item={selectedItem} onClose={() => setSelectedItem(null)} />
