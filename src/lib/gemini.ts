@@ -50,7 +50,7 @@ export async function* streamChat(
   contents.push({ role: "user", parts: [{ text: userMessage }] });
 
   const response = await ai.models.generateContentStream({
-    model: "gemini-2.0-flash",
+    model: "gemini-2.5-flash",
     contents,
     config: {
       systemInstruction: SYSTEM_PROMPT,
