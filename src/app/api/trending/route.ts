@@ -13,11 +13,8 @@ export async function GET(request: NextRequest) {
       getTopAnimePage(page),
     ]);
 
-    const items = [
-      ...movies.slice(0, 4),
-      ...tv.slice(0, 4),
-      ...anime.slice(0, 4),
-    ];
+    const allItems = [...movies, ...tv, ...anime];
+    const items = allItems.slice(0, 12); // 12 items per page (2 rows of 6)
 
     return Response.json({ items });
   } catch {

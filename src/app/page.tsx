@@ -10,14 +10,10 @@ async function getTrending(): Promise<UnifiedRecommendation[]> {
     const [movies, tv, anime] = await Promise.all([
       getTrendingMovies(1),
       getTrendingTv(1),
-      getTopAnime(5),
+      getTopAnime(20),
     ]);
-    const combined = [
-      ...movies.slice(0, 4),
-      ...tv.slice(0, 4),
-      ...anime.slice(0, 4),
-    ];
-    return combined.slice(0, 12);
+    const combined = [...movies, ...tv, ...anime];
+    return combined.slice(0, 12); // 2 rows of 6
   } catch {
     return [];
   }

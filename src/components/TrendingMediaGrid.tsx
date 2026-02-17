@@ -57,12 +57,12 @@ export function TrendingMediaGrid({ items: initialItems }: TrendingMediaGridProp
 
   return (
     <>
-      <div className="mt-8 grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6">
+      <div className="mt-8 grid grid-cols-2 gap-5 sm:grid-cols-3 md:grid-cols-6">
         {items.map((item, i) => (
           <div
             key={`${item.type}-${item.id}`}
             className="animate-slide-up"
-            style={{ animationDelay: `${Math.min(700 + i * 50, 1500)}ms` }}
+            style={{ animationDelay: `${Math.min(200 + (i % 6) * 50 + Math.floor(i / 6) * 100, 1500)}ms` }}
           >
             <MovieCard item={item} onClick={setSelectedItem} />
           </div>
