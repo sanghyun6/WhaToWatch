@@ -31,6 +31,7 @@ export function MoodSelector({
   const selectedId = controlledSelectedId ?? internalSelectedId;
 
   const handleSelect = (mood: MoodOption) => {
+    console.log("Selected mood:", mood);
     if (controlledSelectedId === undefined) {
       setInternalSelectedId(mood.id);
     }
@@ -78,7 +79,10 @@ export function MoodSelector({
         <div className="mt-8 flex animate-slide-up justify-center">
           <button
             type="button"
-            onClick={() => onFindRecommendations?.(selectedMood)}
+            onClick={() => {
+              console.log("Find recommendations button clicked, mood:", selectedMood);
+              onFindRecommendations?.(selectedMood);
+            }}
             className="rounded-xl bg-accent px-8 py-4 font-display text-lg font-semibold text-white shadow-lg transition-[color,background-color,box-shadow,transform] duration-300 ease-out hover:bg-accent/90 hover:shadow-xl active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-surface"
           >
             Find recommendations

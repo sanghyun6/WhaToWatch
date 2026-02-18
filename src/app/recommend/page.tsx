@@ -1,7 +1,6 @@
 import { Link } from "next-view-transitions";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { MoodSelector } from "@/components/MoodSelector";
-import { RecommendationGrid } from "@/components/RecommendationGrid";
+import { RecommendSection } from "@/components/RecommendSection";
 
 export default function RecommendPage() {
   return (
@@ -32,18 +31,7 @@ export default function RecommendPage() {
           <p className="mt-1 text-muted">
             Select a mood or situation to get tailored recommendations.
           </p>
-          <div className="mt-6">
-            <MoodSelector />
-          </div>
-        </section>
-
-        <section className="mt-12">
-          <h3 className="font-display text-xl font-semibold text-foreground">
-            For you
-          </h3>
-          <div className="mt-4">
-            <RecommendationGrid items={[]} />
-          </div>
+          <RecommendSection />
         </section>
       </main>
     </div>
